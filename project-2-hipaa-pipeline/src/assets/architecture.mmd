@@ -1,0 +1,20 @@
+graph TD
+    subgraph "Ingestion Layer"
+        A[Raw Claims Files] -->|Cloud Storage| B(BigQuery Bronze Layer)
+        C[Member Roster] -->|Cloud Storage| B
+    end
+
+    subgraph "Processing Layer (Dataflow/SQL)"
+        B -->|Data Cleaning| D(BigQuery Silver Layer)
+        D -->|PDC Calculation Logic| E{Measure Engine}
+        E -->|Adherence Rules| F(BigQuery Gold Layer)
+    end
+
+    subgraph "Consumption Layer"
+        F -->|SQL Interface| G[Tableau / Looker]
+        F -->|API| H[Executive Dashboard]
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
+    style G fill:#bfb,stroke:#333,stroke-width:2px
